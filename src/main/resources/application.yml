@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: moba-manager-core
+
+  # PostgreSQL Configuration
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/moba_db}
+    username: ${SPRING_DATASOURCE_USERNAME:admin}
+    password: ${SPRING_DATASOURCE_PASSWORD:password}
+    driver-class-name: org.postgresql.Driver
+  
+  jpa:
+    hibernate:
+      # Use 'validate' or 'none' in prod to prevent accidental schema changes
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:update}
+    show-sql: ${SPRING_JPA_SHOW_SQL:false}
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  # MongoDB Configuration
+  data:
+    mongodb:
+      uri: ${SPRING_DATA_MONGODB_URI:mongodb://admin:password@localhost:27017/match_history?authSource=admin}
+
+  # Modern Performance: Enabling Virtual Threads for Java 21+
+  threads:
+    virtual:
+      enabled: true
+
+# Management endpoints for monitoring/k8s health checks
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when_authorized
