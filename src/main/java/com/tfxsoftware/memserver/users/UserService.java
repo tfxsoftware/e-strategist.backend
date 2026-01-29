@@ -36,11 +36,11 @@ public class UserService {
     }
 
     public boolean existsByEmail(String email) {   
-    return userRepository.existsByEmailIgnoreCase(email);
+        return userRepository.existsByEmailIgnoreCase(email);
     }
 
     public boolean existsByUsername(String username) {
-    return userRepository.existsByUsernameIgnoreCase(username);
+        return userRepository.existsByUsernameIgnoreCase(username);
     }
 
 }
