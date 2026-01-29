@@ -1,8 +1,11 @@
 package com.tfxsoftware.memserver.users;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.tfxsoftware.memserver.users.User.UserRole;
 import com.tfxsoftware.memserver.users.dto.CreateUserDto;
@@ -23,8 +26,27 @@ public class UserService {
         user.setHashedPassword(userDto.getHashedPassword());
         user.setBalance(DEFAULT_BALANCE);
         user.setRole(UserRole.USER);
-        
+
         return userRepository.save(user);
+    }
+
+    public User getUserById(UUID id) {
+        return userRepository.findById(id)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+    }
+
+    public boolean existsByEmail(String email) {   
+        if (userRepository.existsByEmailIgnoreCase(email)) {
+            return false;
+        } 
+        return true;
+    }
+
+    public boolean existsByUsername(String username) {
+        if (userRepository.existsByUsernameIgnoreCase(username)) {
+            return false;
+        } 
+        return true;
     }
 
 }
