@@ -5,8 +5,8 @@ import lombok.NoArgsConstructor;
 import lombok.Data;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class SignInResponse {
-    String teste;
+    private String token;
 }

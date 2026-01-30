@@ -10,6 +10,7 @@ import com.tfxsoftware.memserver.auth.dto.SignUpDto;
 import com.tfxsoftware.memserver.auth.dto.SignInDto;
 import com.tfxsoftware.memserver.users.UserService;
 import com.tfxsoftware.memserver.users.dto.CreateUserDto;
+
 import com.tfxsoftware.memserver.users.User;
 
 import jakarta.transaction.Transactional;
@@ -20,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class AuthService {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
     @Transactional
     public void signUp(SignUpDto dto) {
@@ -46,21 +48,25 @@ public class AuthService {
         }
     }
 
-    public SignInResponse signIn(SignInDto dto){
+public SignInResponse signIn(SignInDto dto) {
         String email = dto.getEmail().trim().toLowerCase();
-    
+        
+        // 1. Find user (This handles the 404/401 logic we discussed)
         User user;
-
         try {
             user = userService.getUserByEmail(email);
-        } catch (ResponseStatusException e) {
+        } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password");
         }
 
+        // 2. Check Password
         if (!passwordEncoder.matches(dto.getPassword(), user.getHashedPassword())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password");
         }
 
-        return new SignInResponse("teste");
+        // 3. Generate Token
+        String token = jwtService.generateToken(user.getEmail());
+
+        return new SignInResponse(token);
     }
 }

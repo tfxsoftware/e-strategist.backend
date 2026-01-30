@@ -9,12 +9,19 @@ spring:
     password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: org.postgresql.Driver
   
+  # JPA & Hibernate
   jpa:
+    open-in-view: false
     hibernate:
       ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO}
     show-sql: ${SPRING_JPA_SHOW_SQL}
 
-  # Modern Performance: Enabling Virtual Threads for Java 21+
+  # Modern Performance: Java 21+ Virtual Threads
   threads:
     virtual:
       enabled: true
+
+# Your custom JWT properties from earlier
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION}
