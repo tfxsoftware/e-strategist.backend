@@ -27,11 +27,9 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PostMapping("/signin")
-    public ResponseEntity<SignInResponse> signIn(@RequestBody @Valid SignInDto dto) {
-        SignInResponse response = authService.signIn(dto);
-        // Use 201 Created for successful signups
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+@   PostMapping("/signin")
+    public ResponseEntity<SignInResponse> signIn(@RequestBody SignInDto dto) {
+        return ResponseEntity.ok(authService.signIn(dto));
     }
 
 }
