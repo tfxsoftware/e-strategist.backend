@@ -6,9 +6,8 @@ spring:
     password: password
 
   # MongoDB - The URI is the most reliable way to pass auth in modern Spring
-  data:
-    mongodb:
-      uri: mongodb://admin:password@localhost:27017/match_history?authSource=admin
+  mongodb:
+    uri: mongodb://admin:password@localhost:27017/match_history?authSource=admin
 
   jpa:
     show-sql: true
