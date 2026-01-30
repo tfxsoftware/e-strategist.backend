@@ -61,7 +61,7 @@ tasks.withType<Test> {
 
 tasks.register<JavaExec>("dev") {
     group = "application"
-    description = "Runs the Spring Boot application with the 'local' profile."
+    description = "Runs the Spring Boot application"
     
     classpath = sourceSets["main"].runtimeClasspath
 		mainClass.set("com.tfxsoftware.memserver.MemserverApplication")
