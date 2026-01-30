@@ -14,16 +14,6 @@ spring:
       ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO}
     show-sql: ${SPRING_JPA_SHOW_SQL}
 
-  # MongoDB Configuration - Using discrete properties for better reliability
-
-  mongodb:
-    host: ${SPRING_DATA_MONGODB_HOST}
-    port: ${SPRING_DATA_MONGODB_PORT}
-    database: ${SPRING_DATA_MONGODB_DATABASE}
-    username: ${SPRING_DATA_MONGODB_USERNAME}
-    password: ${SPRING_DATA_MONGODB_PASSWORD}
-    authentication-database: ${SPRING_DATA_MONGODB_AUTH_DB}
-
   # Modern Performance: Enabling Virtual Threads for Java 21+
   threads:
     virtual:
