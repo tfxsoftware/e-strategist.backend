@@ -25,20 +25,35 @@ repositories {
 }
 
 dependencies {
+	// Spring Boot Starters - Core functionality
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-webmvc")
+	
+	// Security - Authentication and authorization
+	implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation("org.springframework.security:spring-security-crypto")
+	
+	// JWT - JSON Web Token support
+	implementation("io.jsonwebtoken:jjwt-api:0.12.5")
+	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.5")
+	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.5")
+	
+	// Database Drivers
+	runtimeOnly("org.postgresql:postgresql")
+	
+	// Development Tools
 	compileOnly("org.projectlombok:lombok")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
-	runtimeOnly("org.postgresql:postgresql")
 	annotationProcessor("org.projectlombok:lombok")
-	testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
-	testImplementation("org.springframework.boot:spring-boot-starter-data-mongodb-test")
-	testImplementation("org.springframework.boot:spring-boot-starter-validation-test")
-	testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
+	
+	// Environment Variables
+	implementation("io.github.cdimascio:dotenv-java:3.0.0")
+	
+	// Test Dependencies
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-	implementation("org.springframework.security:spring-security-crypto")
 }
 
 tasks.withType<Test> {
@@ -52,8 +67,5 @@ tasks.register<JavaExec>("dev") {
     classpath = sourceSets["main"].runtimeClasspath
 		mainClass.set("com.tfxsoftware.memserver.MemserverApplication")
 		dependsOn("classes")
-    
-    // This replaces your long --args command
-    args("--spring.profiles.active=local")
 }
 
