@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.UUID;
 
@@ -67,6 +68,8 @@ public class Player {
 
     @Column(nullable = false)
     private BigDecimal marketValue;
+
+    private LocalDateTime salaryDueDate;
 
     @Builder.Default
     private Boolean isListed = false;

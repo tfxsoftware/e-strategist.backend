@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -79,6 +80,7 @@ public class PlayerService {
                 .condition(Player.PlayerCondition.HEALTHY)
                 .salary(FIXED_SALARY)
                 .marketValue(FIXED_MARKET_VALUE)
+                .salaryDueDate(LocalDateTime.now().plusWeeks(1))
                 .owner(owner)     // Automatically attach to user
                 .isListed(false)  // Not on market since it's owned
                 .isStar(false)
@@ -116,6 +118,7 @@ public class PlayerService {
                 .condition(player.getCondition())
                 .isStar(player.getIsStar())
                 .salary(player.getSalary())
+                .salaryDueDate(player.getSalaryDueDate())
                 .marketValue(player.getMarketValue())
                 .trainingHeroId(player.getTrainingHeroId())
                 .trainingRole(player.getTrainingRole())
