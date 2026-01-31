@@ -44,6 +44,9 @@ public class RosterService {
             if (player.getOwner() == null || !player.getOwner().getId().equals(owner.getId())) {
                 throw new IllegalArgumentException("Player " + player.getNickname() + " does not belong to you.");
             }
+            if (player.getRoster() != null) {
+                throw new IllegalArgumentException("Player " + player.getNickname() + " is already assigned to a roster.");
+            }
         }
 
         Roster roster = Roster.builder()
