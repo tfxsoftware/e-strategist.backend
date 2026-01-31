@@ -37,6 +37,7 @@ public class HeroService {
                 .primaryTier(hero.getPrimaryTier())
                 .secondaryRole(hero.getSecondaryRole())
                 .secondaryTier(hero.getSecondaryTier())
+                .archetype(hero.getArchetype())
                 .build();
     }
 }

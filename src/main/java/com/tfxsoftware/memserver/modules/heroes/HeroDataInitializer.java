@@ -1,5 +1,7 @@
 package com.tfxsoftware.memserver.modules.heroes;
 
+import com.tfxsoftware.memserver.modules.heroes.Hero.HeroArchetype;
+import com.tfxsoftware.memserver.modules.heroes.Hero.MetaTier;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -18,68 +20,70 @@ public class HeroDataInitializer implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) {
-        log.info("Synchronizing Hero pool in modules folder (Flat Structure)...");
+        log.info("Synchronizing Hero pool with Archetypes (22 Heroes)...");
 
         List<Hero> seedHeroes = List.of(
-            // MID
-            createHero("Luxana", "MID", Hero.MetaTier.S, "SUPPORT", Hero.MetaTier.B),
-            createHero("Ignis", "MID", Hero.MetaTier.A, null, null),
-            createHero("Vortex", "MID", Hero.MetaTier.S, "JUNGLE", Hero.MetaTier.C),
-            createHero("Aurelia", "MID", Hero.MetaTier.A, null, null),
-            createHero("Zenith", "MID", Hero.MetaTier.B, null, null),
+            // --- MID ---
+            createHero("Luxana", "MID", MetaTier.S, "SUPPORT", MetaTier.B, HeroArchetype.MAGE),
+            createHero("Ignis", "MID", MetaTier.A, null, null, HeroArchetype.MAGE),
+            createHero("Vortex", "MID", MetaTier.S, "JUNGLE", MetaTier.C, HeroArchetype.ASSASSIN),
+            createHero("Aurelia", "MID", MetaTier.A, null, null, HeroArchetype.MAGE),
+            createHero("Zenith", "MID", MetaTier.B, null, null, HeroArchetype.MAGE),
             
-            // JUNGLE
-            createHero("Storm Spirit", "JUNGLE", Hero.MetaTier.S, "TOP", Hero.MetaTier.D),
-            createHero("Shadow", "JUNGLE", Hero.MetaTier.A, null, null),
-            createHero("Fenris", "JUNGLE", Hero.MetaTier.S, "TOP", Hero.MetaTier.B),
-            createHero("Kraken", "JUNGLE", Hero.MetaTier.B, "SUPPORT", Hero.MetaTier.D),
-            createHero("Rengar", "JUNGLE", Hero.MetaTier.A, "TOP", Hero.MetaTier.C),
+            // --- JUNGLE ---
+            createHero("Storm Spirit", "JUNGLE", MetaTier.S, "TOP", MetaTier.D, HeroArchetype.ASSASSIN),
+            createHero("Shadow", "JUNGLE", MetaTier.A, null, null, HeroArchetype.ASSASSIN),
+            createHero("Fenris", "JUNGLE", MetaTier.S, "TOP", MetaTier.B, HeroArchetype.BRUISER),
+            createHero("Kraken", "JUNGLE", MetaTier.B, "SUPPORT", MetaTier.D, HeroArchetype.TANK),
+            createHero("Rengar", "JUNGLE", MetaTier.A, "TOP", MetaTier.C, HeroArchetype.ASSASSIN),
 
-            // ADC
-            createHero("Vail", "ADC", Hero.MetaTier.S, null, null),
-            createHero("Bolt", "ADC", Hero.MetaTier.B, null, null),
-            createHero("Cinder", "ADC", Hero.MetaTier.A, "MID", Hero.MetaTier.C),
-            createHero("Riptide", "ADC", Hero.MetaTier.S, null, null),
-            createHero("Ghost", "ADC", Hero.MetaTier.A, null, null),
+            // --- ADC ---
+            createHero("Vail", "ADC", MetaTier.S, null, null, HeroArchetype.MARKSMAN),
+            createHero("Bolt", "ADC", MetaTier.B, null, null, HeroArchetype.MARKSMAN),
+            createHero("Cinder", "ADC", MetaTier.A, "MID", MetaTier.C, HeroArchetype.MARKSMAN),
+            createHero("Riptide", "ADC", MetaTier.S, null, null, HeroArchetype.MARKSMAN),
+            createHero("Jinx", "ADC", MetaTier.B, null, null, HeroArchetype.MARKSMAN),
 
-            // TOP
-            createHero("IronClad", "TOP", Hero.MetaTier.A, "JUNGLE", Hero.MetaTier.B),
-            createHero("Goliath", "TOP", Hero.MetaTier.S, null, null),
-            createHero("Atlas", "TOP", Hero.MetaTier.A, "SUPPORT", Hero.MetaTier.B),
-            createHero("Katarina", "TOP", Hero.MetaTier.S, "MID", Hero.MetaTier.C),
+            // --- TOP ---
+            createHero("IronClad", "TOP", MetaTier.A, "JUNGLE", MetaTier.B, HeroArchetype.TANK),
+            createHero("Goliath", "TOP", MetaTier.S, null, null, HeroArchetype.BRUISER),
+            createHero("Atlas", "TOP", MetaTier.A, "SUPPORT", MetaTier.B, HeroArchetype.TANK),
+            createHero("Katarina", "TOP", MetaTier.S, "MID", MetaTier.C, HeroArchetype.ASSASSIN),
 
-            // SUPPORT
-            createHero("Seraphina", "SUPPORT", Hero.MetaTier.S, null, null),
-            createHero("Thorn", "SUPPORT", Hero.MetaTier.A, "TOP", Hero.MetaTier.D),
-            createHero("Echo", "SUPPORT", Hero.MetaTier.B, "MID", Hero.MetaTier.D)
+            // --- SUPPORT ---
+            createHero("Seraphina", "SUPPORT", MetaTier.S, null, null, HeroArchetype.ENCHANTER),
+            createHero("Thorn", "SUPPORT", MetaTier.A, "TOP", MetaTier.D, HeroArchetype.TANK),
+            createHero("Echo", "SUPPORT", MetaTier.B, "MID", MetaTier.D, HeroArchetype.ENCHANTER)
         );
 
         seedHeroes.forEach(this::upsertHero);
         log.info("Hero synchronization complete. Total: {}", heroRepository.count());
     }
 
-    private void upsertHero(Hero seedHero) {
-        heroRepository.findByName(seedHero.getName()).ifPresentOrElse(
+    private void upsertHero(Hero seed) {
+        heroRepository.findByName(seed.getName()).ifPresentOrElse(
             existing -> {
-                existing.setPictureUrl(seedHero.getPictureUrl());
-                existing.setPrimaryRole(seedHero.getPrimaryRole());
-                existing.setPrimaryTier(seedHero.getPrimaryTier());
-                existing.setSecondaryRole(seedHero.getSecondaryRole());
-                existing.setSecondaryTier(seedHero.getSecondaryTier());
+                existing.setPictureUrl(seed.getPictureUrl());
+                existing.setPrimaryRole(seed.getPrimaryRole());
+                existing.setPrimaryTier(seed.getPrimaryTier());
+                existing.setSecondaryRole(seed.getSecondaryRole());
+                existing.setSecondaryTier(seed.getSecondaryTier());
+                existing.setArchetype(seed.getArchetype());
                 heroRepository.save(existing);
             },
-            () -> heroRepository.save(seedHero)
+            () -> heroRepository.save(seed)
         );
     }
 
-    private Hero createHero(String name, String pRole, Hero.MetaTier pTier, String sRole, Hero.MetaTier sTier) {
+    private Hero createHero(String name, String pR, MetaTier pT, String sR, MetaTier sT, HeroArchetype arch) {
         return Hero.builder()
                 .name(name)
                 .pictureUrl("https://api.dicebear.com/7.x/pixel-art/svg?seed=" + name)
-                .primaryRole(Hero.HeroRole.valueOf(pRole))
-                .primaryTier(pTier)
-                .secondaryRole(sRole != null ? Hero.HeroRole.valueOf(sRole) : null)
-                .secondaryTier(sTier)
+                .primaryRole(Hero.HeroRole.valueOf(pR))
+                .primaryTier(pT)
+                .secondaryRole(sR != null ? Hero.HeroRole.valueOf(sR) : null)
+                .secondaryTier(sT)
+                .archetype(arch)
                 .build();
     }
 }

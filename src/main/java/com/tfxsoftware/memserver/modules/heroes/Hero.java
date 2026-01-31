@@ -39,8 +39,45 @@ public class Hero {
     @Enumerated(EnumType.STRING)
     private MetaTier secondaryTier;
 
+    // --- Strategy Identity ---
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private HeroArchetype archetype;
+
     public enum HeroRole {
         TOP, JUNGLE, MID, ADC, SUPPORT
+    }
+
+    /**
+     * Archetypes drive both Counters and Synergies.
+     * Logic: 2 Counters (Strong against) and 2 Synergies (Works well with).
+     */
+    public enum HeroArchetype {
+        TANK, BRUISER, ASSASSIN, MAGE, MARKSMAN, ENCHANTER;
+
+        // Rock-Paper-Scissors Logic
+        public boolean counters(HeroArchetype opponent) {
+            return switch (this) {
+                case TANK -> opponent == ASSASSIN || opponent == MARKSMAN; // Hard to kill for sustained damage
+                case BRUISER -> opponent == TANK || opponent == ENCHANTER; // Shreds tanks/squishies
+                case ASSASSIN -> opponent == MAGE || opponent == MARKSMAN; // Bursts squishies
+                case MAGE -> opponent == BRUISER || opponent == TANK;      // Zone control/CC
+                case MARKSMAN -> opponent == BRUISER || opponent == ENCHANTER; // High sustained DPS
+                case ENCHANTER -> opponent == ASSASSIN || opponent == MAGE; // Shields/Peel vs burst
+            };
+        }
+
+        // Synergy Logic
+        public boolean synergizesWith(HeroArchetype teammate) {
+            return switch (this) {
+                case TANK -> teammate == MAGE || teammate == ENCHANTER;     // Frontline + Backline
+                case BRUISER -> teammate == ASSASSIN || teammate == TANK;   // Dive buddies
+                case ASSASSIN -> teammate == BRUISER || teammate == ENCHANTER; // Dive + Speed/Shields
+                case MAGE -> teammate == TANK || teammate == MARKSMAN;      // CC + Damage
+                case MARKSMAN -> teammate == ENCHANTER || teammate == TANK; // Protection + DPS
+                case ENCHANTER -> teammate == MARKSMAN || teammate == ASSASSIN; // Buffing the carry
+            };
+        }
     }
 
     public enum MetaTier {

@@ -1,5 +1,6 @@
 package com.tfxsoftware.memserver.modules.heroes.dto;
 
+import com.tfxsoftware.memserver.modules.heroes.Hero.HeroArchetype;
 import com.tfxsoftware.memserver.modules.heroes.Hero.HeroRole;
 import com.tfxsoftware.memserver.modules.heroes.Hero.MetaTier;
 import lombok.Builder;
@@ -25,4 +26,6 @@ public class HeroResponse {
     // Secondary Role Info (Null if the hero is a specialist)
     private HeroRole secondaryRole;
     private MetaTier secondaryTier;
+
+    private HeroArchetype archetype;
 }
