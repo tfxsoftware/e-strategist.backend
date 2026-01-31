@@ -21,14 +21,15 @@ public class Hero {
     @Column(unique = true, nullable = false)
     private String name;
 
-    @Column()
+    @Column(nullable = true)
     private String pictureUrl;
-    
+
     /**
-     * Maps a Role to its specific Meta Data for the current season.
-     * This allows a hero to have different Tiers and Efficiencies depending on the lane.
+     * FIX: Added FetchType.EAGER.
+     * This ensures the roleSettings are loaded into memory immediately
+     * when the Hero is fetched, preventing "No Session" errors in the Service.
      */
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "hero_role_metadata", joinColumns = @JoinColumn(name = "hero_id"))
     @MapKeyColumn(name = "role")
     @MapKeyEnumerated(EnumType.STRING)
@@ -42,26 +43,18 @@ public class Hero {
         S, A, B, C, D
     }
 
-    /**
-     * Nested class to hold role-specific balance data.
-     */
     @Embeddable
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
     public static class RoleMetadata {
-        @Column(precision = 3, scale = 2)
-        private BigDecimal efficiency; // Base capability in this role (e.g. 1.0 or 0.8)
-
-        @Enumerated(EnumType.STRING)
-        private MetaTier tier; // Current Meta Tier for this specific role
-
-        @Column(precision = 3, scale = 2)
-        private BigDecimal multiplier; // The multiplier applied in the Win Formula (e.g. 1.2 for S-tier)
+        private BigDecimal efficiency;
+        private MetaTier tier;
+        private BigDecimal multiplier;
     }
 
-    /**
+        /**
      * Helper for the Match Engine to get efficiency.
      */
     public BigDecimal getEfficiencyForRole(HeroRole role) {
