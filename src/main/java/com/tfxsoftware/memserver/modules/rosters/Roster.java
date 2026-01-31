@@ -26,6 +26,9 @@ public class Roster {
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
+    @Column(nullable = false, unique = true)
+    private String name;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Region region;
@@ -53,7 +56,7 @@ public class Roster {
     private List<Player> players;
 
     public enum RosterActivity {
-        IDLE, BOOTCAMPING, IN_TOURNAMENT
+        IDLE, BOOTCAMP, IN_TOURNAMENT
     }
 
     @Builder.Default
