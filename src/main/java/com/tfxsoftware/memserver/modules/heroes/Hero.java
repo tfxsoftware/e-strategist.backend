@@ -21,6 +21,9 @@ public class Hero {
     @Column(unique = true, nullable = false)
     private String name;
 
+    @Column()
+    private String pictureUrl;
+    
     /**
      * Maps a Role to its specific Meta Data for the current season.
      * This allows a hero to have different Tiers and Efficiencies depending on the lane.
