@@ -29,26 +29,97 @@ public class HeroDataInitializer implements CommandLineRunner {
 
         // We wrap the seed data in mutable structures
         List<Hero> seedHeroes = List.of(
+            // --- MID LANERS (Control Mages & Assassins) ---
             createHero("Luxana", "https://api.dicebear.com/7.x/pixel-art/svg?seed=Luxana", Map.of(
                 Hero.HeroRole.MID, createMeta(1.00, Hero.MetaTier.S, 1.20),
                 Hero.HeroRole.SUPPORT, createMeta(0.90, Hero.MetaTier.B, 1.00)
             )),
+            createHero("Ignis", "https://api.dicebear.com/7.x/pixel-art/svg?seed=Ignis", Map.of(
+                Hero.HeroRole.MID, createMeta(1.00, Hero.MetaTier.A, 1.10)
+            )),
+            createHero("Vortex", "https://api.dicebear.com/7.x/pixel-art/svg?seed=Vortex", Map.of(
+                Hero.HeroRole.MID, createMeta(1.00, Hero.MetaTier.S, 1.25),
+                Hero.HeroRole.JUNGLE, createMeta(0.80, Hero.MetaTier.C, 0.90)
+            )),
+            createHero("Aurelia", "https://api.dicebear.com/7.x/pixel-art/svg?seed=Aurelia", Map.of(
+                Hero.HeroRole.MID, createMeta(1.00, Hero.MetaTier.A, 1.15)
+            )),
+            createHero("Zenith", "https://api.dicebear.com/7.x/pixel-art/svg?seed=Zenith", Map.of(
+                Hero.HeroRole.MID, createMeta(1.00, Hero.MetaTier.B, 1.00)
+            )),
+
+            // --- JUNGLERS (Assassins & Tanks) ---
             createHero("Storm Spirit", "https://api.dicebear.com/7.x/pixel-art/svg?seed=Storm", Map.of(
                 Hero.HeroRole.JUNGLE, createMeta(1.00, Hero.MetaTier.S, 1.25),
                 Hero.HeroRole.TOP, createMeta(0.75, Hero.MetaTier.D, 0.80)
             )),
+            createHero("Shadow Stalker", "https://api.dicebear.com/7.x/pixel-art/svg?seed=Shadow", Map.of(
+                Hero.HeroRole.JUNGLE, createMeta(1.00, Hero.MetaTier.A, 1.15)
+            )),
+            createHero("Fenris", "https://api.dicebear.com/7.x/pixel-art/svg?seed=Fenris", Map.of(
+                Hero.HeroRole.JUNGLE, createMeta(1.00, Hero.MetaTier.S, 1.20),
+                Hero.HeroRole.TOP, createMeta(0.90, Hero.MetaTier.B, 1.05)
+            )),
+            createHero("Jade", "https://api.dicebear.com/7.x/pixel-art/svg?seed=Jade", Map.of(
+                Hero.HeroRole.JUNGLE, createMeta(1.00, Hero.MetaTier.B, 1.00),
+                Hero.HeroRole.SUPPORT, createMeta(0.85, Hero.MetaTier.C, 0.90)
+            )),
+            createHero("Kraken", "https://api.dicebear.com/7.x/pixel-art/svg?seed=Kraken", Map.of(
+                Hero.HeroRole.JUNGLE, createMeta(1.00, Hero.MetaTier.A, 1.10),
+                Hero.HeroRole.SUPPORT, createMeta(0.70, Hero.MetaTier.D, 0.80)
+            )),
+
+            // --- CARRYS (Marksmen) ---
             createHero("Vail", "https://api.dicebear.com/7.x/pixel-art/svg?seed=Vail", Map.of(
                 Hero.HeroRole.CARRY, createMeta(1.00, Hero.MetaTier.S, 1.15)
             )),
+            createHero("Bolt", "https://api.dicebear.com/7.x/pixel-art/svg?seed=Bolt", Map.of(
+                Hero.HeroRole.CARRY, createMeta(1.00, Hero.MetaTier.B, 1.00)
+            )),
+            createHero("Cinder", "https://api.dicebear.com/7.x/pixel-art/svg?seed=Cinder", Map.of(
+                Hero.HeroRole.CARRY, createMeta(1.00, Hero.MetaTier.A, 1.10),
+                Hero.HeroRole.MID, createMeta(0.80, Hero.MetaTier.C, 0.95)
+            )),
+            createHero("Riptide", "https://api.dicebear.com/7.x/pixel-art/svg?seed=Riptide", Map.of(
+                Hero.HeroRole.CARRY, createMeta(1.00, Hero.MetaTier.S, 1.18)
+            )),
+            createHero("Ghost", "https://api.dicebear.com/7.x/pixel-art/svg?seed=Ghost", Map.of(
+                Hero.HeroRole.CARRY, createMeta(1.00, Hero.MetaTier.A, 1.12)
+            )),
+
+            // --- TOP LANERS (Bruisers & Tanks) ---
             createHero("IronClad", "https://api.dicebear.com/7.x/pixel-art/svg?seed=Iron", Map.of(
                 Hero.HeroRole.TOP, createMeta(1.00, Hero.MetaTier.A, 1.10),
                 Hero.HeroRole.JUNGLE, createMeta(0.85, Hero.MetaTier.B, 1.00)
+            )),
+            createHero("Goliath", "https://api.dicebear.com/7.x/pixel-art/svg?seed=Goliath", Map.of(
+                Hero.HeroRole.TOP, createMeta(1.00, Hero.MetaTier.S, 1.20)
+            )),
+            createHero("Atlas", "https://api.dicebear.com/7.x/pixel-art/svg?seed=Atlas", Map.of(
+                Hero.HeroRole.TOP, createMeta(1.00, Hero.MetaTier.A, 1.12),
+                Hero.HeroRole.SUPPORT, createMeta(0.80, Hero.MetaTier.B, 1.00)
+            )),
+            createHero("Katarina", "https://api.dicebear.com/7.x/pixel-art/svg?seed=Kat", Map.of(
+                Hero.HeroRole.TOP, createMeta(1.00, Hero.MetaTier.S, 1.22),
+                Hero.HeroRole.MID, createMeta(0.85, Hero.MetaTier.C, 0.95)
+            )),
+
+            // --- SUPPORTS (Enchanters & Engagers) ---
+            createHero("Seraphina", "https://api.dicebear.com/7.x/pixel-art/svg?seed=Sera", Map.of(
+                Hero.HeroRole.SUPPORT, createMeta(1.00, Hero.MetaTier.S, 1.20)
+            )),
+            createHero("Thorn", "https://api.dicebear.com/7.x/pixel-art/svg?seed=Thorn", Map.of(
+                Hero.HeroRole.SUPPORT, createMeta(1.00, Hero.MetaTier.A, 1.10),
+                Hero.HeroRole.TOP, createMeta(0.60, Hero.MetaTier.D, 0.70)
+            )),
+            createHero("Echo", "https://api.dicebear.com/7.x/pixel-art/svg?seed=Echo", Map.of(
+                Hero.HeroRole.SUPPORT, createMeta(1.00, Hero.MetaTier.B, 1.00),
+                Hero.HeroRole.MID, createMeta(0.70, Hero.MetaTier.D, 0.85)
             ))
         );
 
         seedHeroes.forEach(this::upsertHero);
-        
-        log.info("Hero data synchronization complete.");
+        log.info("Hero synchronization complete. Total heroes in pool: {}", heroRepository.count());
     }
 
     private void upsertHero(Hero seedHero) {
