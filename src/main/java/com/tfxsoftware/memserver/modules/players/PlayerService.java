@@ -38,6 +38,13 @@ public class PlayerService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public List<PlayerResponse> getOwnedPlayers(User owner) {
+        return playerRepository.findByOwnerId(owner.getId()).stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
     /**
      * Recruitment Logic: Generates a random "Rookie" and attaches it to the user.
      * Checks if the user has room in their roster (Max 5 players).
