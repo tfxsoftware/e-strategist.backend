@@ -60,6 +60,9 @@ public class Player {
 
     @Builder.Default
     private Boolean isStar = false;
+    
+    @Enumerated(EnumType.STRING)
+    private PlayerTrait playerTrait;
 
     // --- Financials & Ownership ---
 
@@ -82,5 +85,14 @@ public class Player {
 
     public enum PlayerCondition {
         HEALTHY, SICK, INJURED, BURNT_OUT
+    }
+
+    public enum PlayerTrait {
+        CLUTCH_FACTOR,  // Can make difference if game too close
+        LEADER,         // Boosts team Morale when winning
+        LONE_WOLF,      // Increased multipliers, but reduces team Cohesion
+        TEAM_PLAYER,    // Increases Roster Cohesion gain rate
+        ADAPTIVE,       // Reduces the 20% "Off-Role" penalty
+        WORKAHOLIC      // Loses less Energy during Bootcamp
     }
 }
