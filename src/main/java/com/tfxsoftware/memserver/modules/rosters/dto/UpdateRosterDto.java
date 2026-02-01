@@ -1,0 +1,18 @@
+package com.tfxsoftware.memserver.modules.rosters.dto;
+
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+import java.util.UUID;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class UpdateRosterDto {
+    private List<UUID> addPlayerIds;
+    private List<UUID> removePlayerIds;
+}
