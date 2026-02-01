@@ -2,15 +2,15 @@ package com.tfxsoftware.memserver.modules.rosters;
 
 import com.tfxsoftware.memserver.modules.rosters.dto.CreateRosterDto;
 import com.tfxsoftware.memserver.modules.rosters.dto.RosterResponse;
+import com.tfxsoftware.memserver.modules.rosters.dto.UpdateRosterDto;
 import com.tfxsoftware.memserver.modules.users.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/rosters")
@@ -22,5 +22,13 @@ public class RosterController {
     @PostMapping()
     public ResponseEntity<RosterResponse> createRoster(@AuthenticationPrincipal User user, @RequestBody @Valid CreateRosterDto dto) {
         return ResponseEntity.ok(rosterService.createRoster(user, dto));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<RosterResponse> updateRoster(
+            @AuthenticationPrincipal User user,
+            @PathVariable UUID id,
+            @RequestBody @Valid UpdateRosterDto dto) {
+        return ResponseEntity.ok(rosterService.updateRoster(user, id, dto));
     }
 }
