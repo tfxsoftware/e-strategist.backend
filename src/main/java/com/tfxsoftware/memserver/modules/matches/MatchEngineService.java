@@ -32,6 +32,7 @@ public class MatchEngineService {
     private final HeroService heroService;
     private final RosterService rosterService;
     private final MatchResultService matchResultService;
+    private final PostMatchProcessor postMatchProcessor;
 
     private static final BigDecimal CLUTCH_THRESHOLD_PERCENT = new BigDecimal("0.05");
     private static final double CLUTCH_PROBABILITY_BONUS = 0.20;
@@ -246,26 +247,7 @@ public class MatchEngineService {
         matchResultService.createResult(match, home, away, winnerId);
         matchRepository.save(match);
 
-        // Experience Gain
-        long expGain = 100L; // Fixed exp for now
-        
-        // Home players
-        match.getHomePickIntentions().forEach(pick -> {
-            playerService.findById(pick.getPlayerId()).ifPresent(player -> {
-                Hero hero = finalizedPicks.get(pick.getPlayerId());
-                masteryService.addRoleExperience(player, pick.getRole(), expGain);
-                masteryService.addHeroExperience(player, hero.getId(), expGain);
-            });
-        });
-
-        // Away players
-        match.getAwayPickIntentions().forEach(pick -> {
-            playerService.findById(pick.getPlayerId()).ifPresent(player -> {
-                Hero hero = finalizedPicks.get(pick.getPlayerId());
-                masteryService.addRoleExperience(player, pick.getRole(), expGain);
-                masteryService.addHeroExperience(player, hero.getId(), expGain);
-            });
-        });
+        postMatchProcessor.process(match, winnerId, finalizedPicks);
     }
 
     private Map<UUID, Hero> resolveDraft(Match match) {
