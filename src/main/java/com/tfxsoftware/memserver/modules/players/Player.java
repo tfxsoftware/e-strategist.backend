@@ -91,7 +91,7 @@ public class Player {
         LEADER,         // Boosts team Morale when winning, reduces loss when losing
         LONE_WOLF,      // Increased multipliers, but reduces team Cohesion
         TEAM_PLAYER,    // Increases Roster Cohesion gain rate
-        ADAPTIVE,       // Reduces "Off-Role" penalty
+        ADAPTIVE,       // Increases role multiplier
         WORKAHOLIC      // Reduces roster energy loss during Bootcamp/tournament
     }
 }
