@@ -52,7 +52,7 @@ public class MatchEngineService {
         UUID winnerId = determineWinner(homePerf, awayPerf, match);
 
         // 4. Persistence
-        saveMatchResult(match, homePerf, awayPerf, winnerId);
+        //saveMatchResult(match, homePerf, awayPerf, winnerId); COMMENTING THIS FOR TESTING ENGINE FIRST
 
         log.info("Match {} simulation complete. Winner: {}", matchId, winnerId);
     }
