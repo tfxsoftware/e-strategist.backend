@@ -43,23 +43,27 @@ public class Match {
     @ElementCollection
     @CollectionTable(name = "match_bans_home", joinColumns = @JoinColumn(name = "match_id"))
     @Column(name = "hero_id")
-    private List<UUID> homeBans;
+    @Builder.Default
+    private List<UUID> homeBans = new java.util.ArrayList<>();
 
     @ElementCollection
     @CollectionTable(name = "match_bans_away", joinColumns = @JoinColumn(name = "match_id"))
     @Column(name = "hero_id")
-    private List<UUID> awayBans;
+    @Builder.Default
+    private List<UUID> awayBans = new java.util.ArrayList<>();
 
     /**
      * Storing the manager's pick preferences for the simulation.
      */
     @ElementCollection
     @CollectionTable(name = "match_picks_home", joinColumns = @JoinColumn(name = "match_id"))
-    private List<MatchPick> homePickIntentions;
+    @Builder.Default
+    private List<MatchPick> homePickIntentions = new java.util.ArrayList<>();
 
     @ElementCollection
     @CollectionTable(name = "match_picks_away", joinColumns = @JoinColumn(name = "match_id"))
-    private List<MatchPick> awayPickIntentions;
+    @Builder.Default
+    private List<MatchPick> awayPickIntentions = new java.util.ArrayList<>();
 
     /**
      * status for async drafting workflow.
