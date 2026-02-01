@@ -31,4 +31,10 @@ public class RosterController {
             @RequestBody @Valid UpdateRosterDto dto) {
         return ResponseEntity.ok(rosterService.updateRoster(user, id, dto));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteRoster(@AuthenticationPrincipal User user, @PathVariable UUID id) {
+        rosterService.deleteRoster(user, id);
+        return ResponseEntity.noContent().build();
+    }
 }

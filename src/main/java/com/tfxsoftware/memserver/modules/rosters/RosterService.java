@@ -170,6 +170,27 @@ public class RosterService {
         return mapToResponse(savedRoster);
     }
 
+    @Transactional
+    public void deleteRoster(User owner, UUID rosterId) {
+        Roster roster = rosterRepository.findById(rosterId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Roster not found"));
+
+        if (!roster.getOwner().getId().equals(owner.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You do not own this roster");
+        }
+
+        List<Player> players = roster.getPlayers();
+        if (players != null) {
+            for (Player player : players) {
+                player.setRoster(null);
+            }
+            playerRepository.saveAll(players);
+        }
+
+        rosterRepository.delete(roster);
+        log.info("Roster {} deleted by user {}", rosterId, owner.getUsername());
+    }
+
     public RosterResponse mapToResponse(Roster roster) {
         return RosterResponse.builder()
                 .id(roster.getId())
