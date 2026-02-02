@@ -209,4 +209,6 @@ public class RosterService {
                         List.of())
                 .build();
     }
+
+    // get roster strength
 }
