@@ -54,21 +54,7 @@ public class JwtService {
      * Validates if the token belongs to the user and isn't expired.
      */
     public boolean isTokenValid(String token, String userEmail) {
-        try {
-            final String extractedEmail = extractEmail(token);
-            return (extractedEmail.equals(userEmail) && !isTokenExpired(token));
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    private boolean isTokenExpired(String token) {
-        return Jwts.parser()
-                .verifyWith(key)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .getExpiration()
-                .before(new Date());
+        final String extractedEmail = extractEmail(token);
+        return (extractedEmail.equals(userEmail));
     }
 }

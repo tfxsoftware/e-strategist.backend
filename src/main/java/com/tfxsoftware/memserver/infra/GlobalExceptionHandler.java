@@ -171,15 +171,3 @@ public class GlobalExceptionHandler {
 
 
 }
-
-// Consistent Error DTO
-@lombok.Data
-@lombok.Builder
-class ErrorResponse {
-    private LocalDateTime timestamp;
-    private int status;
-    private String error;
-    private String message;
-    private String path;
-    private Map<String, String> details;
-}
