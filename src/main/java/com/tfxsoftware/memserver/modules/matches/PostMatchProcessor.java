@@ -63,7 +63,7 @@ public class PostMatchProcessor {
                 Hero hero = finalizedPicks.get(pick.getPlayerId());
                 
                 long heroExp = baseExp;
-                if (!won && player.getTrait() == Player.PlayerTrait.ADAPTIVE) {
+                if (!won && player.getTraits().contains(Player.PlayerTrait.ADAPTIVE)) {
                     heroExp = (long) (heroExp * 1.5);
                     log.info("Player {} has ADAPTIVE trait. Hero XP multiplier applied: {} -> {}", 
                             player.getNickname(), baseExp, heroExp);
@@ -86,7 +86,7 @@ public class PostMatchProcessor {
         // Morale
         BigDecimal oldMorale = roster.getMorale();
         BigDecimal moraleDelta = won ? new BigDecimal("0.5") : new BigDecimal("-0.5");
-        boolean hasLeader = players.stream().anyMatch(p -> p.getTrait() == Player.PlayerTrait.LEADER);
+        boolean hasLeader = players.stream().anyMatch(p -> p.getTraits().contains(Player.PlayerTrait.LEADER));
         if (hasLeader) {
             moraleDelta = won ? new BigDecimal("0.75") : new BigDecimal("-0.25");
             log.info("LEADER trait detected in roster {}. Morale delta adjusted to {}", roster.getName(), moraleDelta);
@@ -98,8 +98,8 @@ public class PostMatchProcessor {
         // Cohesion
         BigDecimal oldCohesion = roster.getCohesion();
         BigDecimal cohesionDelta = won ? new BigDecimal("0.2") : new BigDecimal("0.1");
-        long teamPlayers = players.stream().filter(p -> p.getTrait() == Player.PlayerTrait.TEAM_PLAYER).count();
-        long loneWolves = players.stream().filter(p -> p.getTrait() == Player.PlayerTrait.LONE_WOLF).count();
+        long teamPlayers = players.stream().filter(p -> p.getTraits().contains(Player.PlayerTrait.TEAM_PLAYER)).count();
+        long loneWolves = players.stream().filter(p -> p.getTraits().contains(Player.PlayerTrait.LONE_WOLF)).count();
         
         BigDecimal traitBonus = new BigDecimal("0.05").multiply(new BigDecimal(teamPlayers));
         BigDecimal traitPenalty = new BigDecimal("0.05").multiply(new BigDecimal(loneWolves));
@@ -114,8 +114,8 @@ public class PostMatchProcessor {
 
         // Energy
         int oldEnergy = roster.getEnergy();
-        int energyLoss = -10;
-        long workaholics = players.stream().filter(p -> p.getTrait() == Player.PlayerTrait.WORKAHOLIC).count();
+        int energyLoss = -15;
+        long workaholics = players.stream().filter(p -> p.getTraits().contains(Player.PlayerTrait.WORKAHOLIC)).count();
         energyLoss += (int) (workaholics);
         
         roster.setEnergy(Math.max(0, roster.getEnergy() + energyLoss));
