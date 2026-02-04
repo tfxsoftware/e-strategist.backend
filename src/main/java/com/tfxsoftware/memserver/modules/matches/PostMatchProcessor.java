@@ -116,7 +116,7 @@ public class PostMatchProcessor {
         int oldEnergy = roster.getEnergy();
         int energyLoss = -10;
         long workaholics = players.stream().filter(p -> p.getTrait() == Player.PlayerTrait.WORKAHOLIC).count();
-        energyLoss += (int) (workaholics * 2);
+        energyLoss += (int) (workaholics);
         
         roster.setEnergy(Math.max(0, roster.getEnergy() + energyLoss));
         log.info("Roster {} Energy updated: {} -> {} (Loss: {}, Workaholics: {})", 
