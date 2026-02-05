@@ -62,9 +62,6 @@ public class Player {
     @Column(nullable = false)
     private BigDecimal salary;
 
-    @Column(nullable = false)
-    private BigDecimal marketValue;
-
     private Integer salaryDaysLeft;
 
     @Builder.Default

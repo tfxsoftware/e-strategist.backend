@@ -22,7 +22,6 @@ public class PlayerService {
     private final Random random = new Random();
 
     // Fixed Economic Values for MVP Generation
-    private static final BigDecimal FIXED_MARKET_VALUE = new BigDecimal("5000.00");
     private static final BigDecimal FIXED_SALARY = new BigDecimal("500.00");
     private static final int INITIAL_ROLE_LEVEL = 1;
     private static final long INITIAL_EXPERIENCE = 0L;
@@ -80,7 +79,6 @@ public class PlayerService {
                 .traits(Set.of(trait))
                 .condition(Player.PlayerCondition.HEALTHY)
                 .salary(FIXED_SALARY)
-                .marketValue(FIXED_MARKET_VALUE)
                 .salaryDaysLeft(7)
                 .owner(owner)     // Automatically attach to user
                 .isListed(false)  // Not on market since it's owned
@@ -168,7 +166,6 @@ public class PlayerService {
                 .isStar(player.getIsStar())
                 .salary(player.getSalary())
                 .salaryDaysLeft(player.getSalaryDaysLeft())
-                .marketValue(player.getMarketValue())
                 .trainingHeroId(player.getTrainingHeroId())
                 .trainingRole(player.getTrainingRole())
                 .rosterId(player.getRoster() != null ? player.getRoster().getId() : null)
