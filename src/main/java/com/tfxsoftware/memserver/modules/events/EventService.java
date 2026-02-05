@@ -65,6 +65,7 @@ public class EventService {
                 .gamesPerBlock(dto.getGamesPerBlock())
                 .minutesBetweenGames(dto.getMinutesBetweenGames())
                 .minutesBetweenBlocks(dto.getMinutesBetweenBlocks())
+                .maxPlayers(dto.getMaxPlayers())
                 .build();
 
         // 5. Handle League-specific initialization
@@ -134,6 +135,11 @@ public class EventService {
         // 6. Check if Roster is already registered
         if (eventRegistrationRepository.findByRosterIdAndEventId(rosterId, eventId).isPresent()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Roster is already registered for this event.");
+        }
+
+        // NEW VALIDATION: Check if the event is full
+        if (event.getMaxPlayers() != null && event.getRegistrations().size() >= event.getMaxPlayers()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Event is full. Maximum players reached.");
         }
 
         // 7. Check Balance of Roster Owner

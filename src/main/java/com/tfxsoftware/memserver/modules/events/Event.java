@@ -84,6 +84,8 @@ public class Event {
     private Integer minutesBetweenGames; //change to time so we can have more spaced games/blocks
     private Integer minutesBetweenBlocks;  
 
+    private Integer maxPlayers;
+
     // --- State Tracking (Used during initial generation) ---
     @Builder.Default
     private Integer currentBlockMatchCount = 0; // WE CAN STILL HAVE BLOCKS ON LEAGUE SO ILL LEAVE THIS HERE

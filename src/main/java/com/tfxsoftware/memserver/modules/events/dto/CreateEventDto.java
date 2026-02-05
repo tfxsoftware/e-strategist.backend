@@ -68,6 +68,10 @@ public class CreateEventDto {
     @PositiveOrZero 
     private Integer minutesBetweenBlocks;
 
+    @NotNull(message = "Max players is required")
+    @Positive(message = "Max players must be a positive number")
+    private Integer maxPlayers;
+
     // League specific (Optional based on type)
     private Integer roundRobinCount;
 }
