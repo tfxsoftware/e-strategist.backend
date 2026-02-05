@@ -32,5 +32,4 @@ public class LeagueStanding {
     private Integer position;
     private Integer wins;
     private Integer losses;
-    private Integer points;
 }
