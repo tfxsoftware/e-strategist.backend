@@ -1,5 +1,9 @@
 package com.tfxsoftware.memserver.modules.events;
 
+import com.tfxsoftware.memserver.modules.users.User;
+import com.tfxsoftware.memserver.modules.users.UserRepository;
+import com.tfxsoftware.memserver.modules.rosters.Roster; // New import
+import com.tfxsoftware.memserver.modules.rosters.RosterRepository; // New import
 import org.springframework.web.server.ResponseStatusException;
 import com.tfxsoftware.memserver.modules.events.dto.CreateEventDto;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.http.HttpStatus;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +23,9 @@ import java.util.Objects;
 public class EventService {
 
     private final EventRepository eventRepository;
+    private final UserRepository userRepository;
+    private final EventRegistrationRepository eventRegistrationRepository;
+    private final RosterRepository rosterRepository; // New injection
 
     /**
      * Creates a new Event with strict validation on financial and chronological data.
@@ -41,7 +50,7 @@ public class EventService {
         Event event = Event.builder()
                 .name(dto.getName())
                 .description(dto.getDescription())
-                .region(dto.getRegion())
+                .regions(dto.getRegions()) // Changed from region
                 .type(dto.getType())
                 .status(Event.EventStatus.CLOSED)
                 .tier(dto.getTier())
@@ -72,6 +81,77 @@ public class EventService {
 
         log.info("Successfully created event: {} (Type: {}, Tier: {})", event.getName(), event.getType(), event.getTier());
         return eventRepository.save(event);
+    }
+
+    /**
+     * Handles a roster registering for an event, deducting balance from the roster owner.
+     * @param eventId The ID of the event to register for.
+     * @param rosterId The ID of the roster registering.
+     * @param currentUser The authenticated user attempting the registration.
+     * @return The created EventRegistration.
+     */
+    @Transactional
+    public EventRegistration registerForEvent(UUID eventId, UUID rosterId, User currentUser) {
+        // 1. Fetch Event
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found with ID: " + eventId));
+
+        // 2. Fetch Roster
+        Roster roster = rosterRepository.findById(rosterId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Roster not found with ID: " + rosterId));
+
+        // 2.1. Region Validation
+        if (!event.getRegions().contains(roster.getRegion())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(
+                "Roster region (%s) is not allowed for this event's regions (%s).",
+                roster.getRegion(), event.getRegions()
+            ));
+        }
+
+        // 2.2. Check Roster Status
+        if (roster.getActivity() != Roster.RosterActivity.IDLE) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Roster is not IDLE and cannot register for the event. Current status: " + roster.getActivity());
+        }
+
+        // 3. Verify Roster Ownership
+        if (!roster.getOwner().getId().equals(currentUser.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Roster with ID " + rosterId + " does not belong to the current user.");
+        }
+
+        // 4. Get the Roster's Owner (User)
+        // Re-fetching the user ensures we have a managed entity for transactional operations
+        User owner = userRepository.findById(roster.getOwner().getId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Roster owner not found."));
+
+
+        // 5. Check Event Status
+        if (event.getStatus() != Event.EventStatus.OPEN) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Event is not open for registration.");
+        }
+
+        // 6. Check if Roster is already registered
+        if (eventRegistrationRepository.findByRosterIdAndEventId(rosterId, eventId).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Roster is already registered for this event.");
+        }
+
+        // 7. Check Balance of Roster Owner
+        if (owner.getBalance().compareTo(event.getEntryFee()) < 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Insufficient balance for roster owner to register for this event. Required: " + event.getEntryFee());
+        }
+
+        // 8. Deduct Entry Fee from Roster Owner
+        owner.setBalance(owner.getBalance().subtract(event.getEntryFee()));
+        userRepository.save(owner); // Save updated user balance
+
+        // 9. Create EventRegistration
+        EventRegistration registration = EventRegistration.builder()
+                .event(event)
+                .roster(roster) // Link to Roster
+                .registrationDate(LocalDateTime.now())
+                .build();
+
+        log.info("Roster {} (Owner: {}) registered for event {}. Deducted {}", rosterId, owner.getId(), eventId, event.getEntryFee());
+        return eventRegistrationRepository.save(registration);
     }
 
     /**

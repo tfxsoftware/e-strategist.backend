@@ -10,8 +10,10 @@ import org.hibernate.type.SqlTypes;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet; // New import
 import java.util.List;
 import java.util.Map;
+import java.util.Set; // New import
 import java.util.UUID;
 import com.tfxsoftware.memserver.modules.users.User;
 
@@ -32,9 +34,12 @@ public class Event {
 
     private String description;
 
+    @ElementCollection(targetClass = User.Region.class) // Annotation for collection of enums
+    @CollectionTable(name = "event_regions", joinColumns = @JoinColumn(name = "event_id")) // Table for regions
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private User.Region region;
+    @Column(name = "region", nullable = false)
+    @Builder.Default
+    private Set<User.Region> regions = new HashSet<>(); // Changed field to Set and initialized
 
     @Column(nullable = false)
     private LocalDateTime opensAt;

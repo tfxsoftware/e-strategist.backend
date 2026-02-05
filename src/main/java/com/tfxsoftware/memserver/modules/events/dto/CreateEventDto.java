@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.Set; // New import
 
 /**
  * DTO for creating an event.
@@ -28,8 +29,8 @@ public class CreateEventDto {
 
     private String description;
     
-    @NotNull(message = "Region is required")
-    private Region region;
+    @NotEmpty(message = "At least one region is required") // Changed from NotNull
+    private Set<Region> regions; // Changed field to Set
 
     @NotNull(message = "Event type is required")
     private EventType type;
