@@ -1,4 +1,4 @@
-package com.tfxsoftware.memserver.modules.events;
+package com.tfxsoftware.memserver.modules.events.league;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import com.tfxsoftware.memserver.modules.events.Event;
 
 @Entity
 @Table(name = "leagues")

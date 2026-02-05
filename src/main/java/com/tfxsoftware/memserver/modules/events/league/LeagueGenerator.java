@@ -1,5 +1,7 @@
-package com.tfxsoftware.memserver.modules.events;
+package com.tfxsoftware.memserver.modules.events.league;
 
+import com.tfxsoftware.memserver.modules.events.Event;
+import com.tfxsoftware.memserver.modules.events.EventRegistration;
 import com.tfxsoftware.memserver.modules.matches.Match;
 import com.tfxsoftware.memserver.modules.matches.MatchRepository;
 import com.tfxsoftware.memserver.modules.rosters.Roster;

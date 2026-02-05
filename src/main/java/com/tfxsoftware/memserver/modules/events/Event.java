@@ -1,5 +1,6 @@
 package com.tfxsoftware.memserver.modules.events;
 
+import com.tfxsoftware.memserver.modules.events.league.League;
 import com.tfxsoftware.memserver.modules.matches.Match;
 import jakarta.persistence.*;
 import lombok.*;

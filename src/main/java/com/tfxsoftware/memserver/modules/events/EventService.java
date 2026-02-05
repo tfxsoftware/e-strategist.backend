@@ -6,6 +6,8 @@ import com.tfxsoftware.memserver.modules.rosters.Roster; // New import
 import com.tfxsoftware.memserver.modules.rosters.RosterRepository; // New import
 import org.springframework.web.server.ResponseStatusException;
 import com.tfxsoftware.memserver.modules.events.dto.CreateEventDto;
+import com.tfxsoftware.memserver.modules.events.league.League;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

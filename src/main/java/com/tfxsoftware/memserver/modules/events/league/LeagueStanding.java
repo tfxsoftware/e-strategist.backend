@@ -1,4 +1,4 @@
-package com.tfxsoftware.memserver.modules.events;
+package com.tfxsoftware.memserver.modules.events.league;
 
 import com.tfxsoftware.memserver.modules.rosters.Roster;
 import jakarta.persistence.*;
