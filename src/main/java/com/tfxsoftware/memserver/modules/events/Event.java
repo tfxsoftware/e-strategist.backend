@@ -1,16 +1,19 @@
 package com.tfxsoftware.memserver.modules.events;
 
-
+import com.tfxsoftware.memserver.modules.matches.Match;
 import jakarta.persistence.*;
 import lombok.*;
+
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import com.tfxsoftware.memserver.modules.users.User;
 
 @Entity
 @Table(name = "events")
@@ -27,6 +30,19 @@ public class Event {
     @Column(nullable = false, unique = true)
     private String name;
 
+    private String description;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private User.Region region;
+
+    @Column(nullable = false)
+    private LocalDateTime opensAt;
+
+    private LocalDateTime startsAt;
+
+    private LocalDateTime finishesAt;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private EventType type;
@@ -35,8 +51,9 @@ public class Event {
     @Column(nullable = false)
     private EventStatus status;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Integer tier; // Multiplier for rewards
+    private Tier tier; // Multiplier for rewards
 
     @Column(nullable = false)
     private BigDecimal entryFee;
@@ -80,6 +97,10 @@ public class Event {
     @Builder.Default
     private List<EventRegistration> registrations = new ArrayList<>();
 
+    @OneToMany(mappedBy = "event")
+    private List<Match> matches;
+
     public enum EventType { LEAGUE, TOURNAMENT, CUP }
-    public enum EventStatus { OPEN, ONGOING, FINISHED, CANCELLED }
+    public enum EventStatus { CLOSED, OPEN, ONGOING, FINISHED, CANCELLED }
+    public enum Tier { S, A, B, C, D }
 } 
