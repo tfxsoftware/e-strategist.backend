@@ -1,6 +1,7 @@
 package com.tfxsoftware.memserver.modules.matches;
 
 import com.tfxsoftware.memserver.modules.heroes.Hero.HeroRole;
+import com.tfxsoftware.memserver.modules.events.Event;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -36,7 +37,10 @@ public class Match {
 
     private LocalDateTime playedAt;
 
-    private UUID eventId;
+    // Link back to the Event that owns this match
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "event_id")
+    private Event event;
 
     // --- The Draft Instructions ---
 
