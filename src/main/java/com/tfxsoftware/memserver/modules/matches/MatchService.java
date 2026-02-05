@@ -30,10 +30,10 @@ public class MatchService {
     @Transactional
     public MatchResponse create(CreateMatchDto dto) {
         Match match = Match.builder()
-                .homeRosterId(dto.homeRosterId())
-                .awayRosterId(dto.awayRosterId())
-                .scheduledTime(dto.scheduledTime())
-                .eventId(dto.eventId())
+                .homeRosterId(dto.getHomeRosterId())
+                .awayRosterId(dto.getAwayRosterId())
+                .scheduledTime(dto.getScheduledTime())
+                .eventId(dto.getEventId())
                 .build();
 
         Match savedMatch = matchRepository.save(match);
@@ -61,28 +61,28 @@ public class MatchService {
         UUID userRosterId = isHome ? match.getHomeRosterId() : match.getAwayRosterId();
 
         if (isHome) {
-            if (dto.teamBans() != null) {
-                validateHeroIds(dto.teamBans());
-                if (dto.teamBans().size() > 5) {
+            if (dto.getTeamBans() != null) {
+                validateHeroIds(dto.getTeamBans());
+                if (dto.getTeamBans().size() > 5) {
                     throw new RuntimeException("Ban list cannot exceed 5 heroes");
                 }
                 match.getHomeBans().clear();
-                match.getHomeBans().addAll(dto.teamBans());
+                match.getHomeBans().addAll(dto.getTeamBans());
             }
-            if (dto.pickIntentions() != null) {
-                updatePickIntentions(match.getHomePickIntentions(), dto.pickIntentions(), userRosterId);
+            if (dto.getPickIntentions() != null) {
+                updatePickIntentions(match.getHomePickIntentions(), dto.getPickIntentions(), userRosterId);
             }
         } else {
-            if (dto.teamBans() != null) {
-                validateHeroIds(dto.teamBans());
-                if (dto.teamBans().size() > 5) {
+            if (dto.getTeamBans() != null) {
+                validateHeroIds(dto.getTeamBans());
+                if (dto.getTeamBans().size() > 5) {
                     throw new RuntimeException("Ban list cannot exceed 5 heroes");
                 }
                 match.getAwayBans().clear();
-                match.getAwayBans().addAll(dto.teamBans());
+                match.getAwayBans().addAll(dto.getTeamBans());
             }
-            if (dto.pickIntentions() != null) {
-                updatePickIntentions(match.getAwayPickIntentions(), dto.pickIntentions(), userRosterId);
+            if (dto.getPickIntentions() != null) {
+                updatePickIntentions(match.getAwayPickIntentions(), dto.getPickIntentions(), userRosterId);
             }
         }
 
@@ -92,31 +92,31 @@ public class MatchService {
     private void updatePickIntentions(List<Match.MatchPick> currentPicks, List<UpdateMatchDraftDto.MatchPickDto> newPicks, UUID rosterId) {
         for (UpdateMatchDraftDto.MatchPickDto pickDto : newPicks) {
             // Consistency: Ensure all playerIds inside the pickIntentions list actually belong to the team being updated
-            Player pEntity = playerService.findById(pickDto.playerId())
-                    .orElseThrow(() -> new RuntimeException("Player in pick intentions not found: " + pickDto.playerId()));
+            Player pEntity = playerService.findById(pickDto.getPlayerId())
+                    .orElseThrow(() -> new RuntimeException("Player in pick intentions not found: " + pickDto.getPlayerId()));
 
             if (pEntity.getRoster() == null || !pEntity.getRoster().getId().equals(rosterId)) {
-                throw new RuntimeException("Player " + pickDto.playerId() + " does not belong to the roster");
+                throw new RuntimeException("Player " + pickDto.getPlayerId() + " does not belong to the roster");
             }
 
             // Hero Validation: Ensure preferred heroes exist
             List<UUID> heroIds = new ArrayList<>();
-            heroIds.add(pickDto.preferredHeroId1());
-            heroIds.add(pickDto.preferredHeroId2());
-            heroIds.add(pickDto.preferredHeroId3());
+            heroIds.add(pickDto.getPreferredHeroId1());
+            heroIds.add(pickDto.getPreferredHeroId2());
+            heroIds.add(pickDto.getPreferredHeroId3());
             validateHeroIds(heroIds);
 
             // Remove existing pick for this player if it exists
-            currentPicks.removeIf(p -> p.getPlayerId().equals(pickDto.playerId()));
+            currentPicks.removeIf(p -> p.getPlayerId().equals(pickDto.getPlayerId()));
 
             // Add new pick
             Match.MatchPick newPick = new Match.MatchPick(
-                    pickDto.playerId(),
-                    pickDto.role(),
-                    pickDto.preferredHeroId1(),
-                    pickDto.preferredHeroId2(),
-                    pickDto.preferredHeroId3(),
-                    pickDto.pickOrder()
+                    pickDto.getPlayerId(),
+                    pickDto.getRole(),
+                    pickDto.getPreferredHeroId1(),
+                    pickDto.getPreferredHeroId2(),
+                    pickDto.getPreferredHeroId3(),
+                    pickDto.getPickOrder()
             );
             currentPicks.add(newPick);
         }
