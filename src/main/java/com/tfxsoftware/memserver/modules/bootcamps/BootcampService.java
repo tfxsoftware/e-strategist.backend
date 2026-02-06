@@ -67,16 +67,17 @@ public class BootcampService {
                 .build();
 
         // 2. Map DTOs to Entities using the wrapper list
-        List<PlayerTrainingConfig> entities = request.configs().stream().map(dto -> 
-            PlayerTrainingConfig.builder()
+        List<PlayerTrainingConfig> entities = request.configs().stream().map(dto -> {
+            validateUniqueHeroes(dto);
+            return PlayerTrainingConfig.builder()
                 .session(session)
                 .playerId(dto.getPlayerId())
                 .targetRole(dto.getTargetRole())
                 .primaryHeroId(dto.getPrimaryHeroId())
                 .secondaryHeroId1(dto.getSecondaryHeroId1())
                 .secondaryHeroId2(dto.getSecondaryHeroId2())
-                .build()
-        ).toList();
+                .build();
+        }).toList();
 
         session.setPlayerConfigs(entities);
         
@@ -111,9 +112,32 @@ public class BootcampService {
         }
     }
 
+    private void validateUniqueHeroes(CreateBootcampSessionDto.PlayerTrainingConfigDto dto) {
+        java.util.Set<UUID> heroIds = new java.util.HashSet<>();
+        if (dto.getPrimaryHeroId() != null) heroIds.add(dto.getPrimaryHeroId());
+        
+        int expectedSize = heroIds.size();
+        
+        if (dto.getSecondaryHeroId1() != null) {
+            heroIds.add(dto.getSecondaryHeroId1());
+            if (heroIds.size() <= expectedSize) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Duplicate hero ID in player configuration: " + dto.getSecondaryHeroId1());
+            }
+            expectedSize = heroIds.size();
+        }
+        
+        if (dto.getSecondaryHeroId2() != null) {
+            heroIds.add(dto.getSecondaryHeroId2());
+            if (heroIds.size() <= expectedSize) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Duplicate hero ID in player configuration: " + dto.getSecondaryHeroId2());
+            }
+        }
+    }
+
     private void applyXpTick(BootcampSession session) {
         Roster roster = session.getRoster();
         double strength = rosterService.calculateRosterStrength(roster);
+        log.info("Applying XP tick for roster {} (strength: {})", roster.getId(), strength);
 
         // Deduct energy
         int workaholics = 0;
@@ -126,6 +150,8 @@ public class BootcampService {
 
         int currentEnergy = roster.getEnergy() != null ? roster.getEnergy() : 0;
         roster.setEnergy(Math.max(0, currentEnergy - energyDeduction));
+        log.debug("Roster {} energy: {} -> {} (deduction: {}, workaholics: {})", 
+                roster.getId(), currentEnergy, roster.getEnergy(), energyDeduction, workaholics);
 
         // Increase cohesion
         boolean hasLeader = false;
@@ -134,11 +160,14 @@ public class BootcampService {
                     .anyMatch(p -> p.getTraits().contains(Player.PlayerTrait.LEADER));
         }
         java.math.BigDecimal gain = hasLeader ? LEADER_COHESION_GAIN : BASE_COHESION_GAIN;
+        java.math.BigDecimal oldCohesion = roster.getCohesion();
         java.math.BigDecimal newCohesion = roster.getCohesion().add(gain);
         if (newCohesion.compareTo(MAX_COHESION) > 0) {
             newCohesion = MAX_COHESION;
         }
         roster.setCohesion(newCohesion);
+        log.debug("Roster {} cohesion: {} -> {} (gain: {}, hasLeader: {})", 
+                roster.getId(), oldCohesion, roster.getCohesion(), gain, hasLeader);
 
         rosterService.save(roster);
 
@@ -148,19 +177,26 @@ public class BootcampService {
 
             long roleXp = (long) (BASE_ROLE_XP * strength);
             masteryService.addRoleExperience(player, config.getTargetRole(), roleXp);
+            log.debug("Added {} role XP to player {} for role {}", roleXp, player.getId(), config.getTargetRole());
 
             boolean isAdaptive = player.getTraits().contains(Player.PlayerTrait.ADAPTIVE);
             long primaryBase = isAdaptive ? BASE_ADAPTIVE_HERO_XP : BASE_PRIMARY_HERO_XP;
             long secondaryBase = isAdaptive ? BASE_ADAPTIVE_HERO_XP : BASE_SECONDARY_HERO_XP;
 
             if (config.getPrimaryHeroId() != null) {
-                masteryService.addHeroExperience(player, config.getPrimaryHeroId(), (long) (primaryBase * strength));
+                long xp = (long) (primaryBase * strength);
+                masteryService.addHeroExperience(player, config.getPrimaryHeroId(), xp);
+                log.debug("Added {} primary hero XP to player {} for hero {}", xp, player.getId(), config.getPrimaryHeroId());
             }
             if (config.getSecondaryHeroId1() != null) {
-                masteryService.addHeroExperience(player, config.getSecondaryHeroId1(), (long) (secondaryBase * strength));
+                long xp = (long) (secondaryBase * strength);
+                masteryService.addHeroExperience(player, config.getSecondaryHeroId1(), xp);
+                log.debug("Added {} secondary hero XP (1) to player {} for hero {}", xp, player.getId(), config.getSecondaryHeroId1());
             }
             if (config.getSecondaryHeroId2() != null) {
-                masteryService.addHeroExperience(player, config.getSecondaryHeroId2(), (long) (secondaryBase * strength));
+                long xp = (long) (secondaryBase * strength);
+                masteryService.addHeroExperience(player, config.getSecondaryHeroId2(), xp);
+                log.debug("Added {} secondary hero XP (2) to player {} for hero {}", xp, player.getId(), config.getSecondaryHeroId2());
             }
         }
     }
