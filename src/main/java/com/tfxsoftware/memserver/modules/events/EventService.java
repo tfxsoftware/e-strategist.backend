@@ -61,7 +61,6 @@ public class EventService {
                 .rankPrizes(dto.getRankPrizes())
                 .opensAt(dto.getOpensAt())
                 .startsAt(dto.getStartsAt())
-                .finishesAt(dto.getFinishesAt())
                 .gamesPerBlock(dto.getGamesPerBlock())
                 .minutesBetweenGames(dto.getMinutesBetweenGames())
                 .minutesBetweenBlocks(dto.getMinutesBetweenBlocks())
