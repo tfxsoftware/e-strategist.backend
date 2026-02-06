@@ -37,7 +37,6 @@ public class PlayerResponse {
     // Financials & Training
     private BigDecimal salary;
     private Integer salaryDaysLeft;
-    private BigDecimal marketValue;
     private UUID trainingHeroId;
     private HeroRole trainingRole;
     private UUID rosterId;
