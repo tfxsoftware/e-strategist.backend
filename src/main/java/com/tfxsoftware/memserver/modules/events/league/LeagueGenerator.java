@@ -47,7 +47,7 @@ public class LeagueGenerator {
         int numTeams = teams.size();
         int numRounds = (numTeams - 1) * league.getRoundRobinCount();
         
-        LocalDateTime currentMatchTime = event.getStartsAt();
+        LocalDateTime currentMatchTime = event.getStartsAt().plusMinutes(event.getMinutesBetweenBlocks());
         LocalDateTime lastScheduledTime = currentMatchTime;
         int currentBlockCount = 0;
         List<Match> seasonMatches = new ArrayList<>();
