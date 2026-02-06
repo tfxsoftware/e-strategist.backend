@@ -53,8 +53,6 @@ public class CreateEventDto {
 
     private LocalDateTime startsAt;
 
-    private LocalDateTime finishesAt;
-
     // Pacing
     @NotNull(message = "Games per block is required")
     @PositiveOrZero 

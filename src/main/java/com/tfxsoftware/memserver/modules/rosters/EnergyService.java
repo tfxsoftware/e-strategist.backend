@@ -17,7 +17,7 @@ public class EnergyService {
 
     private static final int MAX_ENERGY = 100;
     private static final int IDLE_RECOVERY = 2;
-    private static final int TOURNAMENT_RECOVERY = 1;
+    private static final int EVENT_RECOVERY = 1;
 
     @Scheduled(cron = "0 0 * * * *") // Every hour
     @Transactional
@@ -31,8 +31,8 @@ public class EnergyService {
             int recovery = 0;
             if (roster.getActivity() == Roster.RosterActivity.IDLE) {
                 recovery = IDLE_RECOVERY;
-            } else if (roster.getActivity() == Roster.RosterActivity.IN_TOURNAMENT) {
-                recovery = TOURNAMENT_RECOVERY;
+            } else if (roster.getActivity() == Roster.RosterActivity.IN_EVENT) {
+                recovery = EVENT_RECOVERY;
             }
 
             if (recovery > 0) {
