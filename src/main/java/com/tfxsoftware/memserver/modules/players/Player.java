@@ -27,6 +27,8 @@ public class Player {
     private String nickname;
 
     private String pictureUrl;
+    
+    private String description;
 
     // --- Mastery Stats ---
 

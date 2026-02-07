@@ -157,6 +157,7 @@ public class PlayerService {
                 .id(player.getId())
                 .nickname(player.getNickname())
                 .pictureUrl(player.getPictureUrl())
+                .description(player.getDescription())
                 .ownerId(player.getOwner() != null ? player.getOwner().getId() : null)
                 .ownerName(player.getOwner() != null ? player.getOwner().getUsername() : "Free Agent")
                 .isFreeAgent(player.getOwner() == null)
