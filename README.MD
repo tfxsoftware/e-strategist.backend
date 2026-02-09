@@ -84,7 +84,7 @@ The API follows RESTful principles. Key modules include:
 
 E-Strategist Backend is an open-source project and welcomes contributions from the community! Whether you're fixing bugs, adding new features, or improving documentation, your help is greatly appreciated.
 
-Please see the [CONTRIBUTING.md](CONTRIBUTING.md) file for guidelines on how to contribute.
+Please see the [CONTRIBUTING.MD](CONTRIBUTING.MD) file for guidelines on how to contribute.
 
 ### License
 
